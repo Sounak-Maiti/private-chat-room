@@ -9,6 +9,97 @@
       name="name"
       value="{{name}}"
     />
+    <!-- Disclaimer Modal -->
+<div id="disclaimer-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h2>Disclaimer</h2>
+    <iframe src="\static\Disclaimer.pdf" width="100%" height="400px"></iframe>
+    <button id="accept-btn">I Agree</button>
+  </div>
+</div>
+    <script>
+      const modal = document.getElementById("disclaimer-modal");
+const closeBtn = document.querySelector(".close-btn");
+const acceptBtn = document.getElementById("accept-btn");
+
+// Show modal only if not already accepted
+if (!sessionStorage.getItem("disclaimerAccepted")) {
+  modal.style.display = "block";
+} else {
+  modal.style.display = "none";
+}
+
+// Close modal on X
+closeBtn.onclick = () => {
+  modal.style.display = "none";
+}
+
+// Close modal on "I Agree"
+acceptBtn.onclick = () => {
+  sessionStorage.setItem("disclaimerAccepted", "true"); // mark as accepted
+  modal.style.display = "none"; // hide modal
+}
+
+// Close modal if clicked outside
+window.onclick = (event) => {
+  if (event.target == modal) modal.style.display = "none";
+}
+
+    </script>
+    <style>
+      /* Modal background */
+.modal {
+  display: block; /* initially visible, can change to none if you want */
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.6);
+}
+
+/* Modal content box */
+.modal-content {
+  background-color: #f8f4ff;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 20px;
+  width: 80%;
+  max-width: 600px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+/* Close button */
+.close-btn {
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #8a2be2;
+}
+
+.close-btn:hover {
+  color: #4b0082;
+}
+
+/* Accept button */
+#accept-btn {
+  background: linear-gradient(135deg, #b3a2ff, #7b68ee);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+#accept-btn:hover {
+  background: linear-gradient(135deg, #7b68ee, #5a4bd1);
+}
+    </style>
   </div>
   <div class="join">
     <input type="text" placeholder="Room Code" name="code" value="{{code}}" />

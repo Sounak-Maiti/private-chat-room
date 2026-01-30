@@ -11,10 +11,9 @@ import time
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "hjhjsdahhds"
 
-app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024  # 10MB
-app.config["ALLOWED_EXTENSIONS"] = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'webp'}
+app.config["MAX_CONTENT_LENGTH"] = 100 * 1024 * 1024  # 100MB
+app.config["ALLOWED_EXTENSIONS"] = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'webp', 'mp4', 'mp3', 'wav', 'ogg', 'zip', 'rar'}
 socketio = SocketIO(app)
-
 rooms = {}
 
 # FIXED DESIGN: Shared RAM file registry

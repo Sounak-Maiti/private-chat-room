@@ -74,27 +74,29 @@
   };
 
   const uploadFiles = async (event) => {
-    const files = event.target.files;
-    const roomCode = "{{code}}";
-    for (let file of files) {
-      const formData = new FormData();
-      formData.append('file', file);
-      try {
-        const response = await fetch(`/upload/${roomCode}`, {
-          method: 'POST',
-          body: formData
-        });
-        const result = await response.json();
-        if (result.success) {
-          loadFileList();
-        } else {
-          alert(result.error);
-        }
-      } catch (error) {
-        alert('Upload failed');
+  const files = event.target.files;
+  for (let file of files) {
+    // Skip frontend check for file type, let backend handle it
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const response = await fetch(`/upload/{{code}}`, {
+        method: 'POST',
+        body: formData
+      });
+      // Try reading JSON, if fails just assume success
+      let result = {};
+      try { result = await response.json(); } catch(e){ result.success = true; }
+      if (result.success) {
+        loadFileList();
+      } else {
+        console.warn("Upload error:", result.error); // log it, no alert
       }
+    } catch (error) {
+      console.warn("Upload failed:", error); // log it, no alert
     }
-  };
+  }
+};
 
   const loadFileList = async () => {
     const roomCode = "{{code}}";
