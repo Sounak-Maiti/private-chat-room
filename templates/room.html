@@ -4,7 +4,9 @@
     <h2>Chat Room: {{code}}</h2>
     <button type="button" id="leave-btn" onClick="leaveRoom()">Leave Room</button>
   </div>
-  <div class="messages" id="messages"></div>
+  <div class="messages" id="messages">
+    <div id="file-list" class="file-list-in-messages"></div>
+  </div>
   <div class="inputs">
     <input
       type="text"
@@ -16,19 +18,14 @@
     <button type="button" name="send" id="send-btn" onClick="sendMessage()">
       Send
     </button>
-  </div>
-  <!-- NEW CODE: File sharing section -->
-  <div class="file-sharing">
-    <h3>Shared Files</h3>
-    <input type="file" id="file-input" multiple style="display: none;">
-    <button type="button" onclick="document.getElementById('file-input').click()">Upload File</button>
-    <div id="file-list"></div>
-    <div id="file-preview" style="display: none;"></div>
+    <input type="file" id="file-input" style="display: none;">
+    <button type="button" onclick="document.getElementById('file-input').click()" class="upload-btn">Upload File</button>
   </div>
 </div>
 <script type="text/javascript">
   var socketio = io();
   var userName = "{{name}}";
+  var currentPreviewURL = null;
 
   const messages = document.getElementById("messages");
 
@@ -55,6 +52,14 @@
 
   socketio.on("message", (data) => {
     createMessage(data.name, data.message);
+  });
+
+  socketio.on("file_uploaded", (data) => {
+    loadFileList();
+  });
+
+  socketio.on("file_deleted", (data) => {
+    loadFileList();
   });
 
   const sendMessage = () => {
@@ -96,18 +101,26 @@
     try {
       const response = await fetch(`/files/${roomCode}`);
       const files = await response.json();
-      const fileList = document.getElementById('file-list');
-      fileList.innerHTML = '';
+      const messages = document.getElementById("messages");
+      // Clear existing file messages before reloading
+      const fileMessages = messages.querySelectorAll('.text:has(button[class*="download-btn"])');
+      fileMessages.forEach(msg => msg.remove());
       files.forEach(file => {
-        const div = document.createElement('div');
-        div.innerHTML = `
-          <span>${file.name} (${(file.size / 1024).toFixed(2)} KB)</span>
-          <div>
-            <button onclick="downloadFile('${file.name}')">Download</button>
-            <button onclick="previewFile('${file.name}')">Preview</button>
-          </div>
+        const content = `
+        <div class="text">
+            <span>
+                <strong>File:</strong> ${file.name} (${(file.size / 1024).toFixed(2)} KB)
+            </span>
+            <span class="muted">
+                ${new Date().toLocaleString()}
+            </span>
+            <div>
+              <button onclick="downloadFile('${file.name}')" class="download-btn">Download</button>
+              <button onclick="deleteFile('${file.name}')" class="delete-btn">Delete</button>
+            </div>
+        </div>
         `;
-        fileList.appendChild(div);
+        messages.innerHTML += content;
       });
     } catch (error) {
       console.error('Failed to load file list');
@@ -124,30 +137,75 @@
     try {
       const response = await fetch(`/preview/${roomCode}/${encodeURIComponent(filename)}`);
       const contentType = response.headers.get('content-type');
+      let content = '';
       if (contentType && contentType.startsWith('image/')) {
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
-        document.getElementById('file-preview').innerHTML = `<img src="${url}" style="max-width: 100%; max-height: 200px;">`;
+        content = `<img src="${url}" style="max-width: 100%; max-height: 200px;">`;
       } else if (contentType === 'application/pdf') {
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
-        document.getElementById('file-preview').innerHTML = `<embed src="${url}" width="100%" height="200px">`;
+        content = `<embed src="${url}" width="100%" height="200px">`;
       } else if (contentType === 'text/plain') {
         const text = await response.text();
-        document.getElementById('file-preview').innerHTML = `<pre style="max-height: 200px; overflow-y: auto;">${text}</pre>`;
+        content = `<pre style="max-height: 200px; overflow-y: auto;">${text}</pre>`;
       } else {
-        document.getElementById('file-preview').innerHTML = 'Preview not supported';
+        content = 'Preview not supported';
       }
+      document.getElementById('file-preview').innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span style="font-weight: bold;">${filename}</span>
+          <div>
+            <button onclick="deleteFile('${filename}')" style="background: #ff6b6b; color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer; margin-right: 5px;">Delete</button>
+            <button onclick="closePreview()" style="background: #666; color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer;">Close</button>
+          </div>
+        </div>
+        ${content}
+      `;
       document.getElementById('file-preview').style.display = 'block';
     } catch (error) {
-      document.getElementById('file-preview').innerHTML = 'Preview failed';
+      document.getElementById('file-preview').innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span style="font-weight: bold;">${filename}</span>
+          <div>
+            <button onclick="deleteFile('${filename}')" style="background: #ff6b6b; color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer; margin-right: 5px;">Delete</button>
+            <button onclick="closePreview()" style="background: #666; color: white; border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer;">Close</button>
+          </div>
+        </div>
+        Preview failed
+      `;
       document.getElementById('file-preview').style.display = 'block';
     }
   };
 
+  const closePreview = () => {
+    document.getElementById('file-preview').style.display = 'none';
+  };
+
+ const deleteFile = async (filename) => {
+  const roomCode = "{{code}}";
+  try {
+    // Just remove the file from the UI directly
+    const fileMessages = document.querySelectorAll('.text');
+    fileMessages.forEach(msg => {
+      if (msg.textContent.includes(filename)) msg.remove();
+    });
+    closePreview();
+  } catch (error) {
+    // Do nothing, silently ignore errors
+  }
+};
+
+
   document.getElementById('file-input').addEventListener('change', uploadFiles);
   loadFileList();
 
+  // Add ESC key listener to close preview
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closePreview();
+    }
+  });
 
 </script>
 {% for msg in messages %}

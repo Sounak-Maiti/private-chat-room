@@ -249,31 +249,38 @@ body::before {
 
 /* NEW CODE: File sharing styles */
 .file-sharing {
-  padding: 10px;
+  padding: 15px;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   margin-top: 10px;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .file-sharing h3 {
-  color: #ffb6c1;
+  color: #b9c4ff; /* bluish-lavender heading */
   font-size: 18px;
   margin-bottom: 10px;
 }
 
 .file-sharing button {
-  padding: 5px 10px;
+  padding: 6px 12px;
   border: none;
-  border-radius: 5px;
-  background: linear-gradient(135deg, #dda0dd, #ba55d3);
-  color: white;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #b7c3ff, #9fb0ff); /* bluish lavender */
+  color: #ffffff;
   font-weight: bold;
   cursor: pointer;
-  margin: 2px;
+  margin: 3px;
+  box-shadow: 0 3px 8px rgba(160, 175, 255, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .file-sharing button:hover {
-  background: linear-gradient(135deg, #ba55d3, #8a2be2);
+  background: linear-gradient(135deg, #a6b6ff, #8fa3ff);
+  box-shadow: 0 6px 14px rgba(150, 165, 255, 0.5);
+  transform: translateY(-1px);
 }
+
 
 #file-list div {
   display: flex;
@@ -283,6 +290,12 @@ body::before {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 5px;
   margin-bottom: 5px;
+  flex-wrap: wrap;
+}
+
+#file-list div div {
+  display: flex;
+  gap: 5px;
 }
 
 #file-preview {
@@ -290,6 +303,49 @@ body::before {
   padding: 10px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
-  max-height: 200px;
+  max-height: 250px;
   overflow-y: auto;
+}
+/* Bluish-lavender Upload & Download buttons */
+.upload-btn,
+.download-btn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #b7c3ff, #9fb0ff);
+  color: #ffffff;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 3px;
+  box-shadow: 0 4px 10px rgba(160, 175, 255, 0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.upload-btn:hover,
+.download-btn:hover {
+  background: linear-gradient(135deg, #a6b6ff, #8fa3ff);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(140, 160, 255, 0.6);
+}
+/* Bluish-lavender normal state */
+.upload-btn,
+.download-btn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #b7c3ff, #9fb0ff);
+  color: #ffffff;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 3px;
+  box-shadow: 0 4px 10px rgba(160, 175, 255, 0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.25s ease;
+}
+
+/* Darkish blush-lavender hover */
+.upload-btn:hover,
+.download-btn:hover {
+  background: linear-gradient(135deg, #9b7bbf, #7d5ba6); /* dark blush lavender */
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(155, 123, 191, 0.55);
 }

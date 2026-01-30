@@ -213,6 +213,23 @@ def preview_file(room_code, filename):
     else:
         return jsonify({'error': 'Preview not supported'}), 400
 
+@app.route('/delete/<room_code>/<filename>', methods=['DELETE'])
+def delete_file(room_code, filename):
+    if not session.get("room") or session.get("room") != room_code:
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    if room_code not in rooms:
+        return jsonify({'error': 'Room not found'}), 404
+    
+    # FIXED DESIGN: Delete from shared RAM registry
+    if room_code in shared_files and filename in shared_files[room_code]:
+        del shared_files[room_code][filename]
+        # Emit real-time update
+        socketio.emit('file_deleted', {'filename': filename}, to=room_code)
+        return jsonify({'success': True})
+    else:
+        return jsonify({'error': 'File not found'}), 404
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     socketio.run(
