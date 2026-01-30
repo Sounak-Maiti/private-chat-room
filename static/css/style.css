@@ -246,3 +246,50 @@ body::before {
 .delete-btn:hover {
   background: #ff5252;
 }
+
+/* NEW CODE: File sharing styles */
+.file-sharing {
+  padding: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin-top: 10px;
+}
+
+.file-sharing h3 {
+  color: #ffb6c1;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.file-sharing button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #dda0dd, #ba55d3);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 2px;
+}
+
+.file-sharing button:hover {
+  background: linear-gradient(135deg, #ba55d3, #8a2be2);
+}
+
+#file-list div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+#file-preview {
+  margin-top: 10px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+}
