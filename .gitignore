@@ -1,0 +1,17 @@
+# User uploaded files (VERY IMPORTANT)
+uploads/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment / secrets
+.env
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Virtual environments (if any)
+venv/
+.env/
