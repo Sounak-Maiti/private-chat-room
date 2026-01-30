@@ -1,19 +1,27 @@
-# TODO: Update Chat App UI Theme
+# TODO: Add Features to Chat App
 
 ## Steps to Complete
-- [x] Update static/css/style.css with white primary background, purple and pink lavender glass, darker blue accents, contrasting colors, and wave animations
-- [ ] Verify the changes by running the app (optional, if needed)
+- [x] Add leave button to room page
+- [x] Add image/file upload functionality
+- [x] Add voice chat (voice messages) like WhatsApp
+- [x] Update CSS for new elements
+- [x] Update backend to handle file uploads and voice messages
 
 ## Information Gathered
-- Current CSS has basic styling for home and room pages.
-- Theme requirements: White primary background, purple and pink lavender glass, darker blue accents, contrasting colors, wave animations instead of gradients.
+- Current app has basic chat functionality.
+- Need to add leave button, file upload, and voice messages without changing existing mechanism.
 
 ## Plan
-- Replace the entire CSS with a new design incorporating white background, wave animations using SVG, purple and lavender glass effects, darker blue accents, and contrasting light/dark elements.
-- Apply to all elements: body, forms, message box, inputs, etc.
+- Add leave button to room.html that redirects to home.
+- Add file input and upload button to room.html.
+- Add record button for voice messages using MediaRecorder API.
+- Update backend to save uploaded files and voice blobs.
+- Update CSS to style new elements.
 
 ## Dependent Files
+- templates/room.html
 - static/css/style.css
+- main.py
 
 ## Followup Steps
-- Test the app to ensure the UI looks as expected.
+- Test the new features.
