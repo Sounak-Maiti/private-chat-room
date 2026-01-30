@@ -231,3 +231,18 @@ body::before {
   color: rgba(0, 0, 0, 0.5);
   font-weight: normal;
 }
+
+.delete-btn {
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 2px 5px;
+  font-size: 10px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.delete-btn:hover {
+  background: #ff5252;
+}
